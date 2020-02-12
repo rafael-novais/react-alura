@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import InputCustomizado from './InputCustomizado.js';
+import TratadorErros from "../erros/TratadorErros.js";
+import PubSub from 'pubsub-js';
 
 export default class FormularioAutor extends Component {
 
@@ -21,17 +23,21 @@ export default class FormularioAutor extends Component {
             "senha": this.state.senha
         };
 
-        fetch("http://localhost:8082/autores", {
+        let tratador = new TratadorErros();
+        
+        if(tratador.verificaCampos(data)){
+
+            fetch("http://localhost:8082/autores", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
           }).then(response => {
-            console.log(response.json());
-            this.nome = "";
-            this.email = "";
-            this.senha = "";
+
+            this.setState({nome:"", email:"", senha: ""});
+            PubSub.publish("limpa-erro", {});
+
             fetch("http://localhost:8082/autores")
                 .then(response => {
                     return response.json();
@@ -41,9 +47,9 @@ export default class FormularioAutor extends Component {
                 })
                 .catch(err => {
                     console.log(err);
-                })
+                });
           });
-
+        }
     }
 
     setNome(evento){

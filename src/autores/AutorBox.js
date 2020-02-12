@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import FormularioAutor from "./FormularioAutor.js";
 import TabelaAutores from "./TabelaAutores.js";
+import App from "../App.js";
 
 export default class AutorBox extends Component {
 
@@ -31,8 +32,13 @@ export default class AutorBox extends Component {
     render(){
         return (
             <div>
-                <FormularioAutor callBackListagem={this.listar}></FormularioAutor>
-                <TabelaAutores lista={this.state.lista}></TabelaAutores>
+                <App></App>
+                <div id="main">
+                    <div className="content" id="content">
+                        <FormularioAutor callBackListagem={this.listar}></FormularioAutor>
+                        <TabelaAutores lista={this.state.lista}></TabelaAutores>
+                    </div>
+                </div>
             </div>
         );
     }
